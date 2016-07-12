@@ -71,7 +71,7 @@ Now the compiler asks, *Do we see any more declarations in this function?"* Whic
 
 At this point the initial pass of the compiler has finished. We are done *"compiling"* our program.
 
-### Compiler pass #2
+### Compiler pass #2 - Execution phase
 Microseconds pass, and the code is now being excuted somewhere else in the program.
 
 ### Line 1
@@ -80,7 +80,39 @@ var foo = "bar";
 ```
 The variable declaration was handled in pass one. This means there's no more `var` to handle anymore. What's left is the assignment of the value, `foo = "bar"`.
 
+What happens if you create multiple `var foo` statments? The compiler only regards the first one. The other declarations are ignored and do not exist during the execution phase.
 
+When the compiler encounters an LHS reference (`var foo`), it needs to ask where that reference exists in scope. *Hey current scope (global),  I have an LHS reference for a variable named foo. Have you ever heard of it?* The Scope Manager answers yes and hands back a reference.
+
+### `bar()` is called, Line 4
+```js
+  var foo = "baz";
+}
+```
+*Hey current scope (bar fn), I have a LHS reference for a variable called foo. Ever heard of it?* Yep, here's a reference.
+
+### `baz(foo)` is called, Line 8
+```js
+  foo = "bam";
+``` 
+*Hey current scope (baz fn), I have a LHS reference for a cariable called foo. Ever heard of it?* Yep, it's a parameter, here's the reference.
+
+### Line 9
+```js
+  bam = "yay";
+}
+```
+*Hey current scope (baz fn), I have a LHS reference for a variable called bam. Ever heard of it?* Nope, go fish. Where do we go? Go out one level, which is global scope.
+
+*Hey current scope (global), I have a LHS reference for a variable called bam. Ever heard of it?* Yep, I just created it for you because there's no strict mode (LOL).
+
+For strict mode? *Hey current scope (global), I have a LHS reference for a variable called bam. Ever heard of it?* Nope, nothing exists and I'm in strict mode.
+
+An undeclared variable means that we were unable to find a variable in any of the scopes we have access to.
+
+Undefined and undeclared are different from each other.
+
+Undefined means it is declared but it has no value assigned, a better name would be "uninitialized".
 
 ------
 ## Brain Dump (organize later)
