@@ -114,8 +114,122 @@ Undefined and undeclared are different from each other.
 
 Undefined means it is declared but it has no value assigned, a better name would be "uninitialized".
 
+## Another example
+
+```js
+var foo = "bar";
+
+function bar() {
+  var foo = "baz";
+
+  function baz(foo) {
+    foo = "bam";
+    bam = "yay";
+  }
+  baz();
+}
+
+bar();
+foo;    // ???
+bam;    // ???
+baz();  // ???
+```
+
+### Declaration Phase
+
+### Line 1
+```js
+var foo = "bar";
+```
+Hey current scope (global) I have a declaration for a variable named `foo`.
+
+### Line 3
+```js
+function bar() {
+```
+Hey current scope (global) I have a declaration for a function named `bar`.
+
+### Line 4
+```js
+  var foo = "baz";
+```
+Hey current scope (`bar`) I have a declaration for a variable named `foo`.
+
+### Line 6
+```js
+  function baz(foo) {
+```
+Hey current scope (`bar`) I have declaration for a function named `baz`.
+
+I have a named parameter for a indentifier called `foo`.
+
+No more declarations, execute.
+
+### Execution Phase
+
+### Line 1
+```js
+var foo = "bar";
+```
+
+Hey global scope, I have a LHS reference for a variable called `foo`, ever heard of him? Yes, here's a reference.
+
+### Line 13
+```js
+bar()
+```
+Lines 3-11 don't exist anymore because there were compiled away.
+
+Hey global scope, do you have a RHS to a function named `bar`? Here's the function.
+
+*Why is line 13 an RHS not an LHS?* Because it's not an LHS. There's not an assignment going on, it's being used.
+
+### Line 4
+```js
+  var foo = "baz";
+```
+*Hey scope of `bar`, I have an LHS reference for a variable called foo, ever heard of it?* Yes, here's the reference.
+
+### Line 10
+```js
+baz();
+```
+Lines 6-9 have been compiled away.
+
+Hey scope of `bar`, I have an RHS reference for a function named `baz`, ever heard of her? Yes, here's the reference, execute.
+
+### Line 7
+```js
+    foo = "bam";
+```
+Hey scope of `baz`, I have an LHS reference for a variable named `foo`, ever heard of her? Yes, `foo` is a named parameter.
+
+### Line 8
+```js
+    bam = "yay";
+```
+Hey scope of `baz`, I have an LHS refernece for a variable named `bam`, ever heard of him? No, go fish. Hey `bar`, ever heard? No. Hey `global`, how about you? Yep, I just made it (no strict mode).
+
+### Line 14
+```js
+foo;
+```
+Hey global scope, I have an RHS reference for a variable called `foo`, ever heard of her? Yep, here's the reference. What's the value? `"bar"`.
+
+### Line 15
+```js
+bam;
+```
+Hey global scope, I have an RHS reference for a variable called `bam`, ever heard of him? Yep, here's the reference. What's the value? `"yay"`.
 ------
-## Brain Dump (organize later)
+
+### Line 16
+Hey global scope, I have an RHS reference for a function called `baz`, ever heard of her? Nope, throw a reference error.
+
+### Undeclarated LHS vs RHS
+In non-strict mode. Unfulfilled LHS references will get automatically created in global scope. But, unfulfilled RHS references will throw reference errors.
+
+## Appendix
 
 **MYTH**: "JavaScript is not a compiled language."
 
