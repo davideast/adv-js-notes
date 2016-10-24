@@ -53,5 +53,5 @@ As of ES3 (IE5&6 days), when `try/catch` was added to the language it was specif
 
 We can reference `err` inside of the `catch` clause, but outside will give us a reference error.
 
-
+ 
  
