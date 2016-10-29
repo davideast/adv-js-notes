@@ -163,3 +163,32 @@ foo("bar");
 This is not idiomatic, but it shows how you can think about an explicit block scope.
 
 ### Dynamic Scope
+
+```js
+// theoretical dynamic scoping 
+function foo() {
+   console.log(bar); // dynamic!
+}
+
+function baz() {
+   var bar = "bar";
+   foo();
+}
+
+baz();
+```
+
+Dynamic scope will walk up the call stack to see if there's a variable available.
+
+Dynamic scoping is a runtime decision whereas lexical scoping is an author time decision.
+
+### Quiz Scope 
+
+1. What kind of scoping rule(s) does JavaScirpt have? Exceptions?
+ - Lexical scoping. `eval` can cheat. `with` keyword.
+2. What are the different ways you can create a new scope?
+ - Functions, catch blocks, curly braces with `let`.
+3. What is the difference between undeclared and `undefined`?
+ - `undefined` is a value, undeclared means it has not yet been registered. `undefined` means it doesn't currently have a value. 
+
+ 
