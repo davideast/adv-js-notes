@@ -1,6 +1,6 @@
 <p>
   <h1 align="center">Hoisting</h2>
-  <h3 align="center">// TODO: </h2>
+  <h3 align="center">The concept is real, but it's actually just the compiler.</h2>
 </p>
 
 
@@ -96,4 +96,39 @@ function sayHello() {
    console.log('hi');
 }
 console.log(sayHello);
+```
+
+Why does JavaScript "hoist" why doesn't it work in a top-down fashion?
+
+Recursion is when a function calls itself. Mutual recursion refers two or more functions calling each other. Mutual recursion would be impossible in a language without hoisting. One of the functions would always be declared too late. A would be declared before B, but B requires A.
+
+```js
+a(1);       // ???
+
+function a(foo) {
+   if(foo > 20) return foo;
+   return b(foo+2);
+}
+
+function b(foo) {
+   return c(foo) + 1;
+}
+
+function c(foo) {
+   return a(foo *2);
+}
+```
+
+C lang header files are manual hoisting. Declarations are at the top of what the compiler handles, because the compiler doesn't automatically hoist.
+
+### Temporal Dead Zone
+`let` doesn't "hoist".
+
+```js
+function boo(bar) {
+   if(bar) {
+      console.log(baz); // ReferenceError
+      let baz = bar;
+   }
+}
 ```
